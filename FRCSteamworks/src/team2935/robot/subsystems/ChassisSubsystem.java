@@ -31,8 +31,10 @@ public class ChassisSubsystem extends T_Subsystem {
 	//Definition of the sensors used on the drive_train subsystem
 	private Encoder leftEncoder = new Encoder(RobotMap.DRIVE_LEFT_ENCODER_A,RobotMap.DRIVE_LEFT_ENCODER_B);
 	private Encoder rightEncoder = new Encoder(RobotMap.DRIVE_RIGHT_ENCODER_A,RobotMap.DRIVE_RIGHT_ENCODER_B);
-	private DrivePIDController pidController = new DrivePIDController();
 	private AHRS gyro = new AHRS(SerialPort.Port.kUSB);
+	
+	//Definition of PID controllers used for drive train control
+	private DrivePIDController pidController = new DrivePIDController();
 
 	//Declaration of variables used to track the current state the robot is in
 	private States shiftedState;

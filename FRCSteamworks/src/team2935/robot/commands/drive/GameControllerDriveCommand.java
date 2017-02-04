@@ -21,21 +21,13 @@ public class GameControllerDriveCommand extends Command {
 		double turn = Robot.oi.getTurnSpeed();
 		if(turn < 0.05){
 			//Robot.chassisSubsystem.speedController(speed);
-			Robot.chassisSubsystem.setLeftMotorSpeeds(speed);
-			Robot.chassisSubsystem.setRightMotorSpeeds(speed);
 		}else{
-			if(Math.abs(speed) > 0.05 && turn > 0.05 ){
+			if(Math.abs(speed) > 0.05 && turn > 0.05){
 				//Robot.chassisSubsystem.setDifferentMotorSpeeds(speed, 0);
-				Robot.chassisSubsystem.setLeftMotorSpeeds(speed);
-				Robot.chassisSubsystem.setRightMotorSpeeds(0);
 			}else if(Math.abs(speed) > 0.05 && turn < 0.05){
 				//Robot.chassisSubsystem.setDifferentMotorSpeeds(0, speed);
-				Robot.chassisSubsystem.setLeftMotorSpeeds(0);
-				Robot.chassisSubsystem.setRightMotorSpeeds(speed);
 			}else{
 				//Robot.chassisSubsystem.setDifferentMotorSpeeds(turn, -turn);
-				Robot.chassisSubsystem.setLeftMotorSpeeds(turn);
-				Robot.chassisSubsystem.setLeftMotorSpeeds(-turn);
 			}
 		}
 	}

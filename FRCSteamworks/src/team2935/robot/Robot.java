@@ -20,6 +20,7 @@ import team2935.robot.subsystems.ShooterSubsystem;
 
 public class Robot extends IterativeRobot {
 
+	//Definition of robot subsystems
 	public static final ChassisSubsystem chassisSubsystem = new ChassisSubsystem();
 	public static final GearSubsystem gearSubsystem = new GearSubsystem();
 	public static final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();

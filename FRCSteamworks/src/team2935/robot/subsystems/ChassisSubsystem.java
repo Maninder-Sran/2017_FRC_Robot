@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team2935.robot.RobotConst;
 import team2935.robot.RobotMap;
 import team2935.robot.commands.drive.GameControllerDriveCommand;
@@ -18,18 +19,13 @@ public class ChassisSubsystem extends T_Subsystem {
 	private VictorSP leftMotor2 = new VictorSP(RobotMap.DRIVE_LEFT_MOTOR2);
 	private VictorSP leftMotor3 = new VictorSP(RobotMap.DRIVE_LEFT_MOTOR3);
 	private VictorSP rightMotor1 = new VictorSP(RobotMap.DRIVE_RIGHT_MOTOR1);
-	private VictorSP rightMotor2 = new VictorSP(RobotMap.DRIVE_RIGHT_MOTOR1);
-	private VictorSP rightMotor3 = new VictorSP(RobotMap.DRIVE_RIGHT_MOTOR1);
+	private VictorSP rightMotor2 = new VictorSP(RobotMap.DRIVE_RIGHT_MOTOR2);
+	private VictorSP rightMotor3 = new VictorSP(RobotMap.DRIVE_RIGHT_MOTOR3);
 	private Solenoid shifterHigh = new Solenoid(RobotMap.SOLENOID_SHIFTER_HIGH);
 	private Solenoid shifterLow  = new Solenoid(RobotMap.SOLENOID_SHIFTER_LOW);
 	
-	@Override
-	public void updatePeriodic() {
-		// TODO Auto-generated method stub
-		
-	}
 	//Definition of the sensors used on the drive_train subsystem
-	private Encoder leftEncoder = new Encoder(RobotMap.DRIVE_LEFT_ENCODER_A,RobotMap.DRIVE_LEFT_ENCODER_B);
+	private Encoder leftEncoder = new Encoder(RobotMap.DRIVE_LEFT_ENCODER_A,RobotMap.DRIVE_LEFT_ENCODER_B,true);
 	private Encoder rightEncoder = new Encoder(RobotMap.DRIVE_RIGHT_ENCODER_A,RobotMap.DRIVE_RIGHT_ENCODER_B);
 	private AHRS gyro = new AHRS(SerialPort.Port.kUSB);
 	
@@ -73,7 +69,7 @@ public class ChassisSubsystem extends T_Subsystem {
 		return (leftEncoder.getDistance() + rightEncoder.getDistance())/2;
 	}
 	public void speedController(double speed){
-		if(shiftedState.equals(States.NOT_SHIFTED)){
+		if(shiftedState.compareTo(States.NOT_SHIFTED) == 0){
 			if(getVelocity() > RobotConst.DRIVE_LOW_SHIFT_THRESHOLD && transmissionState.equals(States.LOW)){
 				setAllMotorSpeeds(speed - RobotConst.DRIVE_PID_POWER_DROP);
 				shiftHigh();
@@ -86,26 +82,27 @@ public class ChassisSubsystem extends T_Subsystem {
 				shiftedState = States.HAS_SHIFTED;
 			}
 			setAllMotorSpeeds(speed);
-		}else if(shiftedState.equals(States.HAS_SHIFTED)){
+		}else if(shiftedState.compareTo(States.HAS_SHIFTED) == 0){
 			setAllMotorSpeeds(speed);
 			shiftedState = States.NOT_SHIFTED;
 		}
 	}
 	public void setAllMotorSpeeds(double speed){
-		setLeftMotorSpeeds(pidController.calcPIDValue(speed, leftEncoder.getRate()));
-		setRightMotorSpeeds(pidController.calcPIDValue(speed, rightEncoder.getRate()));
+		setLeftMotorSpeeds(speed);
+		setRightMotorSpeeds(speed);
 	}
 	public void setDifferentMotorSpeeds(double leftSpeed, double rightSpeed){
-		setLeftMotorSpeeds(pidController.calcPIDValue(leftSpeed, leftEncoder.getRate()));
-		setRightMotorSpeeds(pidController.calcPIDValue(rightSpeed, rightEncoder.getRate()));
-		
+		setLeftMotorSpeeds(leftSpeed);
+		setRightMotorSpeeds(rightSpeed);
 	}
 	public void setLeftMotorSpeeds(double speed){
+		speed = pidController.calcPIDValue(speed, leftEncoder.getRate());
 		leftMotor1.set(speed);
 		leftMotor2.set(speed);
 		leftMotor3.set(speed);
 	}
 	public void setRightMotorSpeeds(double speed){
+		speed = pidController.calcPIDValue(speed, rightEncoder.getRate());
 		rightMotor1.set(speed);
 		rightMotor2.set(speed);
 		rightMotor3.set(speed);
@@ -117,6 +114,17 @@ public class ChassisSubsystem extends T_Subsystem {
 	public void shiftLow(){
 		shifterHigh.set(false);
 		shifterLow.set(true);
+	}
+	@Override
+	public void updatePeriodic() {
+		SmartDashboard.putData("Left Encoder",leftEncoder);
+    	SmartDashboard.putData("Right Encoder",rightEncoder);
+    	SmartDashboard.putData("Gyro", gyro);
+    	SmartDashboard.putNumber("Gyro", gyro.getAngle() % 360);
+	}
+	public void testMotors(){
+		leftMotor3.set(0.5);
+		rightMotor3.set(0.5);
 	}
 	
 }

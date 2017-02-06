@@ -19,15 +19,16 @@ public class GameControllerDriveCommand extends Command {
 	protected void execute() {
 		double speed = Robot.oi.getDriveSpeed();
 		double turn = Robot.oi.getTurnSpeed();
-		if(turn < 0.05){
+		if(Math.abs(turn) < 0.05 && Math.abs(speed)> 0.05){
 			//Robot.chassisSubsystem.speedController(speed);
+			Robot.chassisSubsystem.setAllMotorSpeeds(speed);
 		}else{
 			if(Math.abs(speed) > 0.05 && turn > 0.05){
-				//Robot.chassisSubsystem.setDifferentMotorSpeeds(speed, 0);
+				Robot.chassisSubsystem.setDifferentMotorSpeeds(speed, 0);
 			}else if(Math.abs(speed) > 0.05 && turn < 0.05){
-				//Robot.chassisSubsystem.setDifferentMotorSpeeds(0, speed);
+				Robot.chassisSubsystem.setDifferentMotorSpeeds(0, speed);
 			}else{
-				//Robot.chassisSubsystem.setDifferentMotorSpeeds(turn, -turn);
+				Robot.chassisSubsystem.setDifferentMotorSpeeds(turn, -turn);
 			}
 		}
 	}

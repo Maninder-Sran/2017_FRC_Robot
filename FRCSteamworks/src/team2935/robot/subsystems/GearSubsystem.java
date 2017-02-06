@@ -1,22 +1,12 @@
 package team2935.robot.subsystems;
 
-import com.toronto.subsystems.T_Subsystem;
-
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import team2935.robot.RobotMap;
 import team2935.robot.commands.gear.GearIntakeCommand;
 
-public class GearSubsystem extends T_Subsystem {
-	@Override
-	public void robotInit() {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void updatePeriodic() {
-		// TODO Auto-generated method stub
-		
-	}
+public class GearSubsystem extends 	Subsystem {
+
 	Solenoid openClaw = new Solenoid(RobotMap.SOLENOID_OPEN_CLAW);
 	Solenoid closeClaw = new Solenoid(RobotMap.SOLENOID_CLOSE_CLAW);
 	Solenoid pushArm = new Solenoid(RobotMap.SOLENOID_PUSH_ARM);

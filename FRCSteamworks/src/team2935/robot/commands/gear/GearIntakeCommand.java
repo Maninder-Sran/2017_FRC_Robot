@@ -6,7 +6,7 @@ import team2935.robot.Robot;
 public class GearIntakeCommand extends Command {
 
     public GearIntakeCommand() {
-        requires(Robot.gearSubsystem);
+       // requires(Robot.gearSubsystem);
     }
 
     // Called just before this Command runs the first time

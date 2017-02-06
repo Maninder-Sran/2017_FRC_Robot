@@ -6,9 +6,6 @@ import team2935.robot.Robot;
 import team2935.robot.RobotConst;
 import team2935.utils.GyroPIDController;
 
-/**
- *
- */
 public class DriveToDistanceOnHeading extends Command {
 	private GyroPIDController pidController;
 	private double encoderDistance;
@@ -17,7 +14,6 @@ public class DriveToDistanceOnHeading extends Command {
 	private double targetAngle = -1;
 	
     public DriveToDistanceOnHeading(double distance, double speed, double timeout) {
-        // Use requires() here to declare subsystem dependencies
         requires(Robot.chassisSubsystem);
         this.encoderDistance = Math.abs(distance) 
         		* RobotConst.DRIVE_ENCODER_COUNTS_PER_FT;
@@ -43,7 +39,7 @@ public class DriveToDistanceOnHeading extends Command {
     	// Check for a timeout before the distance
     	if (timeSinceInitialized() > timeout) { return true; }
     	
-    	// Look for Joystick movement - and then end
+    	// Look for joy-stick movement and then end
     	if (Robot.oi.isDriverAction()) { return true; }
     	
     	return Math.abs(Robot.chassisSubsystem.getEncoderDistance()) >= encoderDistance;

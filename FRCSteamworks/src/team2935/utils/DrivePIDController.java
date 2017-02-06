@@ -19,7 +19,7 @@ public class DrivePIDController {
 		return 0;
 	}
 	public double calcPIDValue(double setPoint, double feedback){
-    	double normalizedFeedback = feedback/RobotConst.MAX_DRIVE_SPEED;
+    	double normalizedFeedback = feedback/RobotConst.MAX_DRIVE_ENCODER_SPEED;
     	normalizedFeedback = (normalizedFeedback > 1.0) ? 1.0 : normalizedFeedback;  
     	normalizedFeedback = (normalizedFeedback < -1.0) ? -1.0 : normalizedFeedback;
     	

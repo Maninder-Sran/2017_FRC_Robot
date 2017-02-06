@@ -1,25 +1,12 @@
 package team2935.robot.subsystems;
 
-import com.toronto.subsystems.T_Subsystem;
-
+import edu.wpi.first.wpilibj.command.Subsystem;
 import team2935.robot.commands.intake.FuelIntakeCommand;
 
-public class IntakeSubsystem extends T_Subsystem {
+public class IntakeSubsystem extends Subsystem {
 
     public void initDefaultCommand() {
         setDefaultCommand(new FuelIntakeCommand());
     }
-
-	@Override
-	public void robotInit() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void updatePeriodic() {
-		// TODO Auto-generated method stub
-		
-	}
 }
 

@@ -6,7 +6,7 @@ import team2935.robot.Robot;
 public class ShootFuelCommand extends Command {
 
     public ShootFuelCommand() {
-        requires(Robot.shooterSubsystem);
+       // requires(Robot.shooterSubsystem);
     }
 
     // Called just before this Command runs the first time

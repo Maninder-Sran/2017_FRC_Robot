@@ -1,9 +1,8 @@
 
 package team2935.robot;
 
-import java.util.ArrayList;
-
-import com.toronto.subsystems.T_Subsystem;
+import com.toronto.oi.T_Axis;
+import com.toronto.oi.T_Stick;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -14,19 +13,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import team2935.oi.OI;
 import team2935.robot.commands.drive.GameControllerDriveCommand;
 import team2935.robot.subsystems.ChassisSubsystem;
-import team2935.robot.subsystems.GearSubsystem;
-import team2935.robot.subsystems.IntakeSubsystem;
-import team2935.robot.subsystems.ShooterSubsystem;
 
 public class Robot extends IterativeRobot {
 
 	//Definition of robot subsystems
 	public static final ChassisSubsystem chassisSubsystem = new ChassisSubsystem();
-	public static final GearSubsystem gearSubsystem = new GearSubsystem();
-	public static final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-	public static final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+	//public static final GearSubsystem gearSubsystem = new GearSubsystem();
+	//public static final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+	//public static final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
 	
-	public static ArrayList<T_Subsystem> subsystemList = new ArrayList<>();
+	//public static ArrayList<T_Subsystem> subsystemList = new ArrayList<>();
 	
 	public static OI oi;
 
@@ -39,9 +35,10 @@ public class Robot extends IterativeRobot {
 		chooser.addDefault("Default Auto", new GameControllerDriveCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
-		subsystemList.add(chassisSubsystem);
-		subsystemList.add(intakeSubsystem);
-		subsystemList.add(shooterSubsystem);	
+		chassisSubsystem.robotInit();
+		//subsystemList.add(chassisSubsystem);
+		//subsystemList.add(intakeSubsystem);
+		//subsystemList.add(shooterSubsystem);	
 	}
 
 	@Override
@@ -82,6 +79,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		SmartDashboard.putString("Controller",oi.driverController.toString());
+		chassisSubsystem.updatePeriodic();
 		Scheduler.getInstance().run();
 	}
 
@@ -91,5 +90,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 		LiveWindow.run();
+		//chassisSubsystem.testMotors();
 	}
 }

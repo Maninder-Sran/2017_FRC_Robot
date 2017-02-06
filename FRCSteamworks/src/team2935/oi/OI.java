@@ -2,8 +2,8 @@ package team2935.oi;
 
 import com.toronto.oi.T_Axis;
 import com.toronto.oi.T_Button;
+import com.toronto.oi.T_GameController;
 import com.toronto.oi.T_Logitech_GameController;
-import com.toronto.oi.T_OiController;
 import com.toronto.oi.T_Stick;
 
 import team2935.robot.RobotMap;
@@ -41,9 +41,10 @@ import team2935.robot.RobotMap;
  */
 
 public class OI {
-	T_OiController driverController = new T_Logitech_GameController(RobotMap.DRIVE_CONTROLLER);
+	public T_GameController driverController = new T_Logitech_GameController(RobotMap.DRIVE_CONTROLLER);
 	 public boolean isDriverAction() {
 		 return driverController.isControllerActivated();
+		 
 	 } 
 	 public double getDriveSpeed(){
 	    	return driverController.getAxis(T_Stick.RIGHT, T_Axis.Y);

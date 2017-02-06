@@ -6,7 +6,7 @@ import team2935.robot.Robot;
 public class FuelIntakeCommand extends Command {
 
     public FuelIntakeCommand() {
-        requires(Robot.intakeSubsystem);
+        //requires(Robot.intakeSubsystem);
     }
 
     // Called just before this Command runs the first time

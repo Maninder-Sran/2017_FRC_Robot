@@ -31,6 +31,6 @@ public class GyroPIDController {
     			leftSpeed = -setSpeed;
     		}
     	}
-		//Robot.chassisSubsystem.setDifferentMotorSpeeds(leftSpeed, rightSpeed);
+		Robot.chassisSubsystem.setDifferentMotorSpeeds(leftSpeed, rightSpeed);
 	}
 }

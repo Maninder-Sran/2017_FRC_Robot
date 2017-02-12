@@ -9,6 +9,12 @@ public class GyroPIDController {
 	public GyroPIDController(double speed){
 		setSpeed = speed;
 	}
+	private double calcPValue(double error){
+		return error * RobotConst.GYRO_PID_P;
+	}
+	private double calcDValue(double error){
+		return error * RobotConst.GYRO_PID_D;
+	}
 	public void adjustAngle(double targetAngle, double currentAngle){
 		double angleError = targetAngle - currentAngle;
     	
@@ -20,17 +26,17 @@ public class GyroPIDController {
 
 		// Slow down one motor based on the error.
 		if (angleError > 0) {
-    		rightSpeed -= angleError * RobotConst.GYRO_PROPORTIONAL_GAIN * setSpeed;
+    		rightSpeed -= calcPValue(angleError) - calcDValue(angleError) * setSpeed;
     		if (rightSpeed < -setSpeed) {
     			 rightSpeed = -setSpeed;
     		}
     	}
     	else {
-    		leftSpeed -=  -angleError * RobotConst.GYRO_PROPORTIONAL_GAIN * setSpeed;
+    		leftSpeed -=  -calcPValue(angleError) - calcDValue(angleError) * setSpeed;
     		if (leftSpeed < -setSpeed) {
     			leftSpeed = -setSpeed;
     		}
     	}
-		//Robot.chassisSubsystem.setDifferentMotorSpeeds(leftSpeed, rightSpeed);
+		Robot.chassisSubsystem.setDifferentMotorSpeeds(leftSpeed, rightSpeed);
 	}
 }

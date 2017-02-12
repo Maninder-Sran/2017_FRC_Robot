@@ -31,6 +31,9 @@ import team2935.robot.RobotMap;
  * X:
  * Y:			Drive Straight Command
  * 
+ * 
+ * 
+ * 
  * LBumper:
  * RBumper: 	Rumble (test) the Driver Controller
  * Start:		
@@ -44,19 +47,19 @@ public class OI {
 	public T_GameController driverController = new T_Logitech_GameController(RobotMap.DRIVE_CONTROLLER);
 	 public boolean isDriverAction() {
 		 return driverController.isControllerActivated();
-		 
 	 } 
 	 public double getDriveSpeed(){
-	    	return driverController.getAxis(T_Stick.RIGHT, T_Axis.Y);
+	    	return driverController.getAxis(T_Stick.LEFT, T_Axis.Y);
 	 }
 	 public double getTurnSpeed(){
-		return driverController.getAxis(T_Stick.LEFT, T_Axis.X);
+		return driverController.getAxis(T_Stick.RIGHT, T_Axis.X);
 	 }
 	 public boolean shifterEngaged(){
 		 return driverController.getButton(T_Button.RIGHT_BUMPER);
 	 }
 	 public boolean grabGear(){
-		 return driverController.getButton(T_Button.A);
+	//	 return driverController.getButton(T_Button.A);
+		 return false;
 	 }
 	 public boolean moveGearMechanism(){
 		 return driverController.getButton(T_Button.B);
@@ -66,5 +69,8 @@ public class OI {
 	 }
 	 public boolean intakeFuel(){
 		 return driverController.getButton(T_Button.Y);
+	 }
+	 public boolean driveStraightButton(){
+		 return driverController.getButton(T_Button.A);
 	 }
 }

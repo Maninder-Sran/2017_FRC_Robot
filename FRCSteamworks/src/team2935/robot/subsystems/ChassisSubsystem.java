@@ -1,5 +1,7 @@
 package team2935.robot.subsystems;
 
+import java.text.DecimalFormat;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.toronto.subsystems.T_Subsystem;
 
@@ -12,6 +14,7 @@ import team2935.robot.RobotConst;
 import team2935.robot.RobotMap;
 import team2935.robot.commands.drive.GameControllerDriveCommand;
 import team2935.utils.DrivePIDController;
+import team2935.utils.GyroPIDController;
 
 public class ChassisSubsystem extends T_Subsystem {
 	//Definition of the motors used on the drive_train subsystem
@@ -31,27 +34,35 @@ public class ChassisSubsystem extends T_Subsystem {
 	
 	//Definition of PID controllers used for drive train control
 	private DrivePIDController pidController = new DrivePIDController();
+	private GyroPIDController gyroController = new GyroPIDController(0.2);
 
 	//Declaration of variables used to track the current state the robot is in
 	private States shiftedState;
 	private States transmissionState;
+	public Motions motion;
 	
 	//Declaration of variables that need to be tracked for the AUTO SHIFTER controller
-	private int prev_distance;
+	public int prev_distance;
+	private double powerInput;
 	
 	public enum States{
 		LOW,HIGH,HAS_SHIFTED,NOT_SHIFTED;
+	}
+	public enum Motions{
+		STRAIGHT,TURN;
 	}
 	public void initDefaultCommand() {
 		setDefaultCommand(new GameControllerDriveCommand());
 	}
 	public void robotInit(){
 		prev_distance = 0;
+		powerInput = 0;
 		leftMotor1.setInverted(true);
 		leftMotor2.setInverted(true);
 		leftMotor3.setInverted(true);
 		shiftedState = States.NOT_SHIFTED;
 		transmissionState = States.LOW;
+		motion = Motions.STRAIGHT;
 		gyro.reset();
 		resetEncoders();
 	}
@@ -59,14 +70,25 @@ public class ChassisSubsystem extends T_Subsystem {
 		leftEncoder.reset();
 		rightEncoder.reset();
 	}
+	public void resetGyro(){
+		gyro.reset();
+	}
 	public double getAngle(){
 		return gyro.getAngle() % 360;
 	}
-	public double getVelocity(){
-		return (((prev_distance + getEncoderDistance()) - prev_distance)/RobotConst.DRIVE_ENCODER_COUNTS_PER_FT)/ 0.0027;
-	}
 	public double getEncoderDistance(){
-		return (leftEncoder.getDistance() + rightEncoder.getDistance())/2;
+		return (getLeftEncoderDistance() + getRightEncoderDistance())/2;
+	}
+	public double getLeftEncoderDistance(){
+		return leftEncoder.getDistance();
+	}
+	public double getRightEncoderDistance(){
+		return rightEncoder.getDistance();
+	}
+	public double getVelocity(){
+		double velocity = ((getEncoderDistance() - prev_distance)/RobotConst.DRIVE_ENCODER_COUNTS_PER_FT)/ 0.027;
+		DecimalFormat df = new DecimalFormat("#.0");
+		return Double.valueOf(df.format(velocity));
 	}
 	public void speedController(double speed){
 		if(shiftedState.compareTo(States.NOT_SHIFTED) == 0){
@@ -96,16 +118,16 @@ public class ChassisSubsystem extends T_Subsystem {
 		setRightMotorSpeeds(rightSpeed);
 	}
 	public void setLeftMotorSpeeds(double speed){
-		speed = pidController.calcPIDValue(speed, leftEncoder.getRate());
-		leftMotor1.set(speed);
-		leftMotor2.set(speed);
-		leftMotor3.set(speed);
+		powerInput = pidController.calcPIDValue(speed, getVelocity(),powerInput);
+		leftMotor1.set(powerInput);
+		leftMotor2.set(powerInput);
+		leftMotor3.set(powerInput);
 	}
 	public void setRightMotorSpeeds(double speed){
-		speed = pidController.calcPIDValue(speed, rightEncoder.getRate());
-		rightMotor1.set(speed);
-		rightMotor2.set(speed);
-		rightMotor3.set(speed);
+		powerInput = pidController.calcPIDValue(speed, getVelocity(),powerInput);
+		rightMotor1.set(powerInput);
+		rightMotor2.set(powerInput);
+		rightMotor3.set(powerInput);
 	}
 	public void shiftHigh(){
 		shifterHigh.set(true);
@@ -121,10 +143,6 @@ public class ChassisSubsystem extends T_Subsystem {
     	SmartDashboard.putData("Right Encoder",rightEncoder);
     	SmartDashboard.putData("Gyro", gyro);
     	SmartDashboard.putNumber("Gyro", gyro.getAngle() % 360);
+    	SmartDashboard.putNumber("Velocity",getVelocity());
 	}
-	public void testMotors(){
-		leftMotor3.set(0.5);
-		rightMotor3.set(0.5);
-	}
-	
 }

@@ -1,6 +1,8 @@
 package team2935.utils;
 
+import team2935.robot.Robot;
 import team2935.robot.RobotConst;
+import team2935.robot.subsystems.ChassisSubsystem.Motions;
 
 public class DrivePIDController {
 	//Declaration of variables that need to be tracked in the PID controller
@@ -15,20 +17,18 @@ public class DrivePIDController {
 		delta_error = prev_error - error;
 		return delta_error * RobotConst.DRIVE_PID_D;
 	}
-	private double calcIValue(){
-		return 0;
-	}
-	public double calcPIDValue(double setPoint, double feedback){
-    	double normalizedFeedback = feedback/RobotConst.MAX_DRIVE_ENCODER_SPEED;
-    	normalizedFeedback = (normalizedFeedback > 1.0) ? 1.0 : normalizedFeedback;  
-    	normalizedFeedback = (normalizedFeedback < -1.0) ? -1.0 : normalizedFeedback;
-    	
-    	double error = setPoint - normalizedFeedback;
-    	
-    	double p_out = calcPValue(error);
+	public double calcPIDValue(double setPoint, double feedback,double powerInput){
+    
+		double error;
+		if(Robot.chassisSubsystem.motion.compareTo(Motions.STRAIGHT) == 0)
+			error = (setPoint - feedback)/RobotConst.MAX_LOW_DRIVE_SPEED;
+		else
+			error = (setPoint - feedback)/RobotConst.MAX_LOW_TURN_SPEED;
+		
+		double p_out = calcPValue(error);
     	double d_out = calcDValue(error);
      
-    	double output = setPoint + p_out - d_out;
+    	double output = powerInput + p_out - d_out;
     	
     	double normalizedOutput  = output;
     	normalizedOutput = (normalizedOutput > 1.0) ? 1.0 : normalizedOutput;
@@ -36,5 +36,5 @@ public class DrivePIDController {
     	prev_error = error;
     	
     	return normalizedOutput;
-    }
+	}
 }

@@ -5,15 +5,14 @@ import team2935.robot.Robot;
 import team2935.utils.GyroPIDController;
 
 public class TurnToAngle extends Command {
-	private int targetAngle;
-	private double setSpeed;
+
+	private double targetAngle;
 	private double timeout;
-	private GyroPIDController pidController;
-	
-    public TurnToAngle(int targetAngle,double speed, double timeout) {
+	private GyroPIDController pidController = new GyroPIDController(0.5);
+    public TurnToAngle(double targetAngle, double timeout) {
         requires(Robot.chassisSubsystem);
-        this.targetAngle = (int) (targetAngle + Robot.chassisSubsystem.getAngle());
-        this.setSpeed = speed;
+        this.targetAngle = targetAngle;
+
         this.timeout = timeout;
     }
 
@@ -29,10 +28,11 @@ public class TurnToAngle extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-    	if(Robot.oi.isDriverAction()){ return true; }
-        if(timeSinceInitialized() >= timeout){ return true; }
+
+        if(Robot.oi.isDriverAction()){ return true; }
+        if(timeSinceInitialized() > timeout){ return true; }
         
-        return Robot.chassisSubsystem.getAngle() == targetAngle;
+        return (!(Robot.chassisSubsystem.getAngle() < targetAngle-2) && !(Robot.chassisSubsystem.getAngle() > targetAngle+2));
     }
 
     // Called once after isFinished returns true
